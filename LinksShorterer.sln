@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksShorterer", "LinksShorterer.csproj", "{7356BA91-87FF-4C66-A3D9-6662CA8B1C47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinksShorterer", "src\LinksShorterer.Web\LinksShorterer.csproj", "{7356BA91-87FF-4C66-A3D9-6662CA8B1C47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{80C8F02D-6479-4437-8461-E3BC37903CED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +20,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7356BA91-87FF-4C66-A3D9-6662CA8B1C47} = {80C8F02D-6479-4437-8461-E3BC37903CED}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5E7B273-7C29-41AE-A13C-58B384576C42}
