@@ -19,9 +19,20 @@ public class LinksController : ControllerBase
 
     [HttpPost]
     [Route("generate")]
-    public async Task<ActionResult<string>> GenerateShortLink([FromBody] SourceLink link)
+    public async Task<ActionResult<ResultLink>> GenerateShortLink([FromBody] SourceLink link)
     {
-        var result = await _shorterer.GetShortLinkAsync(link);
+        var result = new ResultLink();
+
+        try
+        {
+            var shortLink = await _shorterer.GetShortLinkAsync(link);
+            result.ShortLink = shortLink;
+
+        }
+        catch (InvalidOperationException ex)
+        {
+            result.Errors.Add(ex.Message);
+        }
 
         return Ok(result);
     }

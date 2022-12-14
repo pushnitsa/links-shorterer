@@ -14,7 +14,23 @@ public class LinksService : IShorterer, IRedirector
 
     public async Task<string> GetShortLinkAsync(SourceLink link)
     {
-        var result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.ShortName, link.IsPermanent, link.ExpirationDate);
+        string result;
+
+        if (link.ShortName != null)
+        {
+            if (await _linkStorage.IsLinkExistsAsync(link.ShortName))
+            {
+                throw new InvalidOperationException($"This short link already exists: {link.ShortName}");
+            }
+            else
+            {
+                result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.ShortName, link.IsPermanent, link.ExpirationDate);
+            }
+        }
+        else
+        {
+            result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.IsPermanent, link.ExpirationDate);
+        }
 
         return result;
     }

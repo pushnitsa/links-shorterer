@@ -21,6 +21,7 @@ public class LinkStorageService : ILinkStorage
     public Task<string> CreateShortLinkAsync(string fullUrl, string shortLinkName, bool isPermanent, DateTime? expirationDate)
     {
         var data = ReadData();
+
         data.Add(new LinksData
         {
             FullUrl = fullUrl,
@@ -46,7 +47,9 @@ public class LinkStorageService : ILinkStorage
 
     public Task<bool> IsLinkExistsAsync(string shortLinkName)
     {
-        throw new NotImplementedException();
+        var data = ReadData();
+
+        return Task.FromResult(data.Any(x => x.ShortLinkName.Equals(shortLinkName)));
     }
 
     private List<LinksData> ReadData()
