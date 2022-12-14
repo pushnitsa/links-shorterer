@@ -1,8 +1,10 @@
-﻿namespace LinksShorterer.ShortererService;
+﻿using LinksShorterer.Models;
+
+namespace LinksShorterer.ShortererService;
 
 public class LinksService : IShorterer, IRedirector
 {
-    public Task<string> GetShortLinkAsync(string fullUrl)
+    public Task<string> GetShortLinkAsync(SourceLink link)
     {
         throw new NotImplementedException();
     }
