@@ -20,7 +20,7 @@ builder.Services.AddSingleton<LinkStorageService>();
 builder.Services.AddTransient<ILinkStorage>(x => x.GetRequiredService<LinkStorageService>());
 builder.Services.AddTransient<ILinkExistanceValidator>(x => x.GetRequiredService<LinkStorageService>());
 
-builder.Services.AddSingleton<IShortLinkGenerator, ShortLinkGeneratorService>();
+builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();
 
 var app = builder.Build();
 
