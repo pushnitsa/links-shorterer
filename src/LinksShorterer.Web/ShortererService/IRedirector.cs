@@ -2,5 +2,5 @@
 
 public interface IRedirector
 {
-    Task<string> GetUrlAsync(string shortUrl);
+    Task<string> GetUrlAsync(string shortLinkName);
 }

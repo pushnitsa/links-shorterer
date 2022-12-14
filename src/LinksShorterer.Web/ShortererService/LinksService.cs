@@ -1,16 +1,28 @@
-﻿using LinksShorterer.Models;
+﻿using LinksShorterer.LinkStorage;
+using LinksShorterer.Models;
 
 namespace LinksShorterer.ShortererService;
 
 public class LinksService : IShorterer, IRedirector
 {
-    public Task<string> GetShortLinkAsync(SourceLink link)
+    private readonly ILinkStorage _linkStorage;
+
+    public LinksService(ILinkStorage linkStorage)
     {
-        throw new NotImplementedException();
+        _linkStorage = linkStorage;
     }
 
-    public Task<string> GetUrlAsync(string shortUrl)
+    public async Task<string> GetShortLinkAsync(SourceLink link)
     {
-        throw new NotImplementedException();
+        var result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.IsPermanent, link.ExpirationDate);
+
+        return result;
+    }
+
+    public async Task<string> GetUrlAsync(string shortLinkName)
+    {
+        var result = await _linkStorage.GetFullUrlAsync(shortLinkName);
+
+        return result;
     }
 }

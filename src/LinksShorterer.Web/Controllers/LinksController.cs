@@ -9,10 +9,12 @@ namespace LinksShorterer.Controllers;
 public class LinksController : ControllerBase
 {
     private readonly IShorterer _shorterer;
+    private readonly IRedirector _redirector;
 
-    public LinksController(IShorterer shorterer)
+    public LinksController(IShorterer shorterer, IRedirector redirector)
     {
         _shorterer = shorterer;
+        _redirector = redirector;
     }
 
     [HttpPost]
@@ -22,5 +24,14 @@ public class LinksController : ControllerBase
         var result = await _shorterer.GetShortLinkAsync(link);
 
         return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("~/{shortLinkName}")]
+    public async Task<ActionResult> FollowTheLink([FromRoute] string shortLinkName)
+    {
+        var result = await _redirector.GetUrlAsync(shortLinkName);
+
+        return RedirectPermanent(result);
     }
 }

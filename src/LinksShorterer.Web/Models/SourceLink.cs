@@ -2,7 +2,7 @@
 
 public class SourceLink
 {
-    public string? FullUrl { get; set; }
+    public string FullUrl { get; set; }
 
     public string? ShortName { get; set; }
 
