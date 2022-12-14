@@ -6,10 +6,12 @@ namespace LinksShorterer.ShortererService;
 public class LinksService : IShorterer, IRedirector
 {
     private readonly ILinkStorage _linkStorage;
+    private readonly ILinkExistanceValidator _linkExistanceValidator;
 
-    public LinksService(ILinkStorage linkStorage)
+    public LinksService(ILinkStorage linkStorage, ILinkExistanceValidator linkExistanceValidator)
     {
         _linkStorage = linkStorage;
+        _linkExistanceValidator = linkExistanceValidator;
     }
 
     public async Task<string> GetShortLinkAsync(SourceLink link)
@@ -18,7 +20,7 @@ public class LinksService : IShorterer, IRedirector
 
         if (link.ShortName != null)
         {
-            if (await _linkStorage.IsLinkExistsAsync(link.ShortName))
+            if (await _linkExistanceValidator.IsLinkExistsAsync(link.ShortName))
             {
                 throw new InvalidOperationException($"This short link already exists: {link.ShortName}");
             }

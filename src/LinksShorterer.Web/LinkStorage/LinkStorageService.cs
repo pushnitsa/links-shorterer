@@ -1,21 +1,44 @@
-﻿using System.Text;
+﻿using LinksShorterer.ShortLinkGenerator;
+using System.Text;
 using System.Text.Json;
 
 namespace LinksShorterer.LinkStorage;
 
-public class LinkStorageService : ILinkStorage
+public class LinkStorageService : ILinkStorage, ILinkExistanceValidator
 {
     private readonly string _filePath = "data.json";
     private readonly object _locker = new();
+    private readonly IShortLinkGenerator _shortLinkGenerator;
 
-    public LinkStorageService()
+    public LinkStorageService(IShortLinkGenerator shortLinkGenerator)
     {
-
+        _shortLinkGenerator = shortLinkGenerator;
     }
 
-    public Task<string> CreateShortLinkAsync(string fullUrl, bool isPermanent, DateTime? expirationDate)
+    public async Task<string> CreateShortLinkAsync(string fullUrl, bool isPermanent, DateTime? expirationDate)
     {
-        throw new NotImplementedException();
+        var data = ReadData();
+        string shortLink;
+
+        while (true)
+        {
+            shortLink = await _shortLinkGenerator.GenerateShortLinkAsync();
+
+            if (!await IsLinkExistsAsync(shortLink))
+            {
+                break;
+            }
+        }
+
+        data.Add(new LinksData
+        {
+            FullUrl = fullUrl,
+            ShortLinkName = shortLink,
+        });
+
+        WriteData(data);
+
+        return shortLink;
     }
 
     public Task<string> CreateShortLinkAsync(string fullUrl, string shortLinkName, bool isPermanent, DateTime? expirationDate)
