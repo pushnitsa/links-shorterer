@@ -27,7 +27,6 @@ public class LinksController : ControllerBase
         {
             var shortLink = await _shorterer.GetShortLinkAsync(link);
             result.ShortLink = shortLink;
-
         }
         catch (InvalidOperationException ex)
         {
@@ -51,7 +50,6 @@ public class LinksController : ControllerBase
         {
             return NotFound();
         }
-
 
         return RedirectPermanent(result);
     }
