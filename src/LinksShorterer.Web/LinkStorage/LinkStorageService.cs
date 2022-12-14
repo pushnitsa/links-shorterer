@@ -61,6 +61,11 @@ public class LinkStorageService : ILinkStorage, ILinkExistanceValidator
         var data = ReadData();
         var result = data.FirstOrDefault(x => x.ShortLinkName == shortLinkName);
 
+        if (result == null)
+        {
+            throw new InvalidOperationException($"Short link was not found: {shortLinkName}");
+        }
+
         result.Hints++;
 
         WriteData(data);

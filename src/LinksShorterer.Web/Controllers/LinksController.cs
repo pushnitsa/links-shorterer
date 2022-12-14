@@ -41,7 +41,17 @@ public class LinksController : ControllerBase
     [Route("~/{shortLinkName}")]
     public async Task<ActionResult> FollowTheLink([FromRoute] string shortLinkName)
     {
-        var result = await _redirector.GetUrlAsync(shortLinkName);
+        string result;
+
+        try
+        {
+            result = await _redirector.GetUrlAsync(shortLinkName);
+        }
+        catch (InvalidOperationException)
+        {
+            return NotFound();
+        }
+
 
         return RedirectPermanent(result);
     }
