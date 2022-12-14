@@ -14,7 +14,7 @@ public class LinksService : IShorterer, IRedirector
 
     public async Task<string> GetShortLinkAsync(SourceLink link)
     {
-        var result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.IsPermanent, link.ExpirationDate);
+        var result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.ShortName, link.IsPermanent, link.ExpirationDate);
 
         return result;
     }
