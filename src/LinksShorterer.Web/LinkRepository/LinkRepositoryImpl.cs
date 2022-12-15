@@ -50,6 +50,22 @@ public class LinkRepositoryImpl : ILinkRepository
         return Task.FromResult(result);
     }
 
+    public Task IncreaseLinkHitsAsync(string shortLinkName)
+    {
+        var data = ReadData();
+
+        var entity = data.FirstOrDefault(x => x.ShortLinkName == shortLinkName);
+
+        if (entity != null)
+        {
+            entity.Hits++;
+
+            WriteData(data);
+        }
+
+        return Task.CompletedTask;
+    }
+
 
     private List<LinksData> ReadData()
     {
@@ -93,6 +109,6 @@ public class LinkRepositoryImpl : ILinkRepository
 
         public string FullUrl { get; set; }
         public string ShortLinkName { get; set; }
-        public int Hints { get; set; }
+        public int Hits { get; set; }
     }
 }
