@@ -42,8 +42,6 @@ public class LinkManagerService : ILinkManager
             throw new InvalidOperationException($"Short link was not found: {shortLinkName}");
         }
 
-        //TODO: Dispatch event for at least hits tracking
-
         var @event = new LinkHit
         {
             ShortLinkName = shortLinkName,
