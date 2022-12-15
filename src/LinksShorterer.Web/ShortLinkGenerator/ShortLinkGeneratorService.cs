@@ -1,4 +1,6 @@
-﻿namespace LinksShorterer.ShortLinkGenerator;
+﻿using LinksShorterer.LinkRepository;
+
+namespace LinksShorterer.ShortLinkGenerator;
 
 public class ShortLinkGeneratorService : IShortLinkGenerator
 {
@@ -6,22 +8,28 @@ public class ShortLinkGeneratorService : IShortLinkGenerator
     private const int _shortUrlLength = 7;
 
     private readonly Random _random = new();
+    private readonly ILinkRepository _linkRepository;
 
-    public ShortLinkGeneratorService()
+    public ShortLinkGeneratorService(ILinkRepository linkRepository)
     {
-
+        _linkRepository = linkRepository;
     }
 
-    public Task<string> GenerateShortLinkAsync()
+    public async Task<string> GenerateShortLinkAsync()
     {
-        var result = new char[_shortUrlLength];
+        var charArray = new char[_shortUrlLength];
+        string result;
 
-        for (var i = 0; i < _shortUrlLength; i++)
+        do
         {
-            var randomIndex = _random.Next(_alphabet.Length - 1);
-            result[i] = _alphabet[randomIndex];
-        }
+            for (var i = 0; i < _shortUrlLength; i++)
+            {
+                var randomIndex = _random.Next(_alphabet.Length - 1);
+                charArray[i] = _alphabet[randomIndex];
+            }
+            result = new string(charArray);
+        } while (await _linkRepository.IsLinkExistsAsync(result));
 
-        return Task.FromResult(new string(result));
+        return result;
     }
 }

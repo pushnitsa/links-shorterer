@@ -1,45 +1,35 @@
-﻿using LinksShorterer.LinkStorage;
+﻿using LinksShorterer.LinkManager;
+using LinksShorterer.LinkRepository;
 using LinksShorterer.Models;
 
 namespace LinksShorterer.ShortererService;
 
 public class LinksService : IShorterer, IRedirector
 {
-    private readonly ILinkStorage _linkStorage;
-    private readonly ILinkExistanceValidator _linkExistanceValidator;
+    private readonly ILinkManager _linkManager;
+    private readonly ILinkRepository _linkRepository;
 
-    public LinksService(ILinkStorage linkStorage, ILinkExistanceValidator linkExistanceValidator)
+    public LinksService(ILinkManager linkManager, ILinkRepository linkRepository)
     {
-        _linkStorage = linkStorage;
-        _linkExistanceValidator = linkExistanceValidator;
+        _linkManager = linkManager;
+        _linkRepository = linkRepository;
     }
 
     public async Task<string> GetShortLinkAsync(SourceLink link)
     {
-        string result;
+        if (link.ShortName != null && await _linkRepository.IsLinkExistsAsync(link.ShortName))
+        {
+            throw new InvalidOperationException($"This short link already exists: {link.ShortName}");
+        }
 
-        if (link.ShortName != null)
-        {
-            if (await _linkExistanceValidator.IsLinkExistsAsync(link.ShortName))
-            {
-                throw new InvalidOperationException($"This short link already exists: {link.ShortName}");
-            }
-            else
-            {
-                result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.ShortName, link.IsPermanent, link.ExpirationDate);
-            }
-        }
-        else
-        {
-            result = await _linkStorage.CreateShortLinkAsync(link.FullUrl, link.IsPermanent, link.ExpirationDate);
-        }
+        var result = await _linkManager.CreateShortLinkAsync(link);
 
         return result;
     }
 
     public async Task<string> GetUrlAsync(string shortLinkName)
     {
-        var result = await _linkStorage.GetFullUrlAsync(shortLinkName);
+        var result = await _linkManager.GetFullUrlAsync(shortLinkName);
 
         return result;
     }

@@ -1,4 +1,5 @@
-using LinksShorterer.LinkStorage;
+using LinksShorterer.LinkManager;
+using LinksShorterer.LinkRepository;
 using LinksShorterer.ShortererService;
 using LinksShorterer.ShortLinkGenerator;
 
@@ -16,11 +17,9 @@ builder.Services.AddTransient<LinksService>();
 builder.Services.AddTransient<IShorterer>(x => x.GetRequiredService<LinksService>());
 builder.Services.AddTransient<IRedirector>(x => x.GetRequiredService<LinksService>());
 
-builder.Services.AddSingleton<LinkStorageService>();
-builder.Services.AddTransient<ILinkStorage>(x => x.GetRequiredService<LinkStorageService>());
-builder.Services.AddTransient<ILinkExistanceValidator>(x => x.GetRequiredService<LinkStorageService>());
-
+builder.Services.AddTransient<ILinkManager, LinkManagerService>();
 builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();
+builder.Services.AddTransient<ILinkRepository, LinkRepositoryImpl>();
 
 var app = builder.Build();
 
