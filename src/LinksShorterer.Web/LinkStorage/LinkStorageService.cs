@@ -20,15 +20,10 @@ public class LinkStorageService : ILinkStorage, ILinkExistanceValidator
         var data = ReadData();
         string shortLink;
 
-        while (true)
+        do
         {
             shortLink = await _shortLinkGenerator.GenerateShortLinkAsync();
-
-            if (!await IsLinkExistsAsync(shortLink))
-            {
-                break;
-            }
-        }
+        } while (!await IsLinkExistsAsync(shortLink));
 
         data.Add(new LinksData
         {
