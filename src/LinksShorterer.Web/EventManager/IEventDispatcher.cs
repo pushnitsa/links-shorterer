@@ -1,4 +1,6 @@
-﻿namespace LinksShorterer.EventManager;
+﻿using LinksShorterer.Events;
+
+namespace LinksShorterer.EventManager;
 
 public interface IEventDispatcher
 {

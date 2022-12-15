@@ -1,6 +1,4 @@
-﻿using LinksShorterer.EventManager;
-
-namespace LinksShorterer.Events;
+﻿namespace LinksShorterer.Events;
 
 public class LinkHit : IEvent
 {
