@@ -1,4 +1,6 @@
-﻿using LinksShorterer.LinkRepository;
+﻿using LinksShorterer.EventManager;
+using LinksShorterer.Events;
+using LinksShorterer.LinkRepository;
 using LinksShorterer.Models;
 using LinksShorterer.ShortLinkGenerator;
 
@@ -8,11 +10,13 @@ public class LinkManagerService : ILinkManager
 {
     private readonly IShortLinkGenerator _shortLinkGenerator;
     private readonly ILinkRepository _linkRepository;
+    private readonly IEventDispatcher _eventDispatcher;
 
-    public LinkManagerService(IShortLinkGenerator shortLinkGenerator, ILinkRepository linkRepository)
+    public LinkManagerService(IShortLinkGenerator shortLinkGenerator, ILinkRepository linkRepository, IEventDispatcher eventDispatcher)
     {
         _shortLinkGenerator = shortLinkGenerator;
         _linkRepository = linkRepository;
+        _eventDispatcher = eventDispatcher;
     }
 
     public async Task<string> CreateShortLinkAsync(SourceLink sourceLink)
@@ -39,6 +43,13 @@ public class LinkManagerService : ILinkManager
         }
 
         //TODO: Dispatch event for at least hits tracking
+
+        var @event = new LinkHit
+        {
+            ShortLinkName = shortLinkName,
+        };
+
+        await _eventDispatcher.DispatchAsync(@event);
 
         return sourceLink.FullUrl;
     }

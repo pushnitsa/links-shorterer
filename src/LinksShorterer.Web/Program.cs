@@ -1,3 +1,6 @@
+using LinksShorterer.EventManager;
+using LinksShorterer.Events;
+using LinksShorterer.Events.Handlers;
 using LinksShorterer.LinkManager;
 using LinksShorterer.LinkRepository;
 using LinksShorterer.ShortererService;
@@ -21,6 +24,12 @@ builder.Services.AddTransient<ILinkManager, LinkManagerService>();
 builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();
 builder.Services.AddTransient<ILinkRepository, LinkRepositoryImpl>();
 
+builder.Services.AddSingleton<EventManagerImpl>();
+builder.Services.AddTransient<IEventManager>(x => x.GetRequiredService<EventManagerImpl>());
+builder.Services.AddTransient<IEventDispatcher>(x => x.GetRequiredService<EventManagerImpl>());
+
+builder.Services.AddTransient<LinkHitEventHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+var eventManager = app.Services.GetRequiredService<IEventManager>();
+eventManager.Subscribe<LinkHit>(async (x) => await app.Services.GetRequiredService<LinkHitEventHandler>().HandleAsync(x));
 
 app.UseAuthorization();
 
