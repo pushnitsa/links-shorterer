@@ -2,5 +2,5 @@
 
 public interface IEventManager
 {
-    void Subscribe<TEvent>(Func<TEvent, Task> listener) where TEvent : class, IEvent;
+    void Subscribe<TEvent>(IEventListener<TEvent> listener) where TEvent : class, IEvent;
 }

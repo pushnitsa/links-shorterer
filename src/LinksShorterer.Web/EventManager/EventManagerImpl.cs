@@ -4,15 +4,15 @@ public class EventManagerImpl : IEventManager, IEventDispatcher
 {
     private readonly Dictionary<Type, List<Func<IEvent, Task>>> _listeners = new();
 
-    public async Task DispatchAsync<DEvent>(DEvent @event) where DEvent : class, IEvent
+    public async Task DispatchAsync<TEvent>(TEvent @event) where TEvent : class, IEvent
     {
-        if (_listeners.TryGetValue(typeof(DEvent), out var handlers))
+        if (_listeners.TryGetValue(typeof(TEvent), out var handlers))
         {
             await Task.WhenAll(handlers.Select(x => x(@event)));
         }
     }
 
-    public void Subscribe<TEvent>(Func<TEvent, Task> listener) where TEvent : class, IEvent
+    public void Subscribe<TEvent>(IEventListener<TEvent> listener) where TEvent : class, IEvent
     {
         if (!_listeners.TryGetValue(typeof(TEvent), out var handlers))
         {
@@ -20,6 +20,6 @@ public class EventManagerImpl : IEventManager, IEventDispatcher
             _listeners.Add(typeof(TEvent), handlers);
         }
 
-        handlers.Add(x => listener((TEvent)x));
+        handlers.Add(x => listener.HandleAsync((TEvent)x));
     }
 }

@@ -1,5 +1,4 @@
 using LinksShorterer.EventManager;
-using LinksShorterer.Events;
 using LinksShorterer.Events.Handlers;
 using LinksShorterer.LinkManager;
 using LinksShorterer.LinkRepository;
@@ -39,7 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 var eventManager = app.Services.GetRequiredService<IEventManager>();
-eventManager.Subscribe<LinkHit>(async (x) => await app.Services.GetRequiredService<LinkHitEventHandler>().HandleAsync(x));
+eventManager.Subscribe(app.Services.GetRequiredService<LinkHitEventHandler>());
 
 app.UseAuthorization();
 
