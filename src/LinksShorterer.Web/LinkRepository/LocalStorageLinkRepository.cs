@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace LinksShorterer.LinkRepository;
 
-public class LinkRepositoryImpl : ILinkRepository
+public class LocalStorageLinkRepository : ILinkRepository
 {
     private readonly string _filePath = "data.json";
     private readonly object _locker = new();
