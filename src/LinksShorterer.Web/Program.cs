@@ -2,6 +2,7 @@ using LinksShorterer.EventManager;
 using LinksShorterer.Events.Handlers;
 using LinksShorterer.LinkManager;
 using LinksShorterer.LinkRepository;
+using LinksShorterer.Options;
 using LinksShorterer.ShortererService;
 using LinksShorterer.ShortLinkGenerator;
 
@@ -21,7 +22,7 @@ builder.Services.AddTransient<IRedirector>(x => x.GetRequiredService<LinksServic
 
 builder.Services.AddTransient<ILinkManager, LinkManagerService>();
 builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();
-builder.Services.AddTransient<ILinkRepository, LocalStorageLinkRepository>();
+builder.Services.AddSingleton<ILinkRepository, MongoLinkRepository>();
 builder.Services.AddSingleton<Func<ILinkRepository>>(x => () => x.GetRequiredService<ILinkRepository>());
 
 builder.Services.AddSingleton<EventManagerImpl>();
@@ -29,6 +30,9 @@ builder.Services.AddTransient<IEventManager>(x => x.GetRequiredService<EventMana
 builder.Services.AddTransient<IEventDispatcher>(x => x.GetRequiredService<EventManagerImpl>());
 
 builder.Services.AddTransient<LinkHitEventHandler>();
+
+// Configuring options
+builder.Configuration.GetSection("MongoDB").Get<MongoOptions>();
 
 var app = builder.Build();
 
