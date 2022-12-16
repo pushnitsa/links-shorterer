@@ -7,17 +7,19 @@ namespace LinksShorterer.ShortererService;
 public class LinksService : IShorterer, IRedirector
 {
     private readonly ILinkManager _linkManager;
-    private readonly ILinkRepository _linkRepository;
+    private readonly Func<ILinkRepository> _linkRepositoryFactory;
 
-    public LinksService(ILinkManager linkManager, ILinkRepository linkRepository)
+    public LinksService(ILinkManager linkManager, Func<ILinkRepository> linkRepositoryFactory)
     {
         _linkManager = linkManager;
-        _linkRepository = linkRepository;
+        _linkRepositoryFactory = linkRepositoryFactory;
     }
 
     public async Task<string> GetShortLinkAsync(SourceLink link)
     {
-        if (link.ShortName != null && await _linkRepository.IsLinkExistsAsync(link.ShortName))
+        using var linkRepository = _linkRepositoryFactory();
+
+        if (link.ShortName != null && await linkRepository.IsLinkExistsAsync(link.ShortName))
         {
             throw new InvalidOperationException($"This short link already exists: {link.ShortName}");
         }

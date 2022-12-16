@@ -9,13 +9,13 @@ namespace LinksShorterer.LinkManager;
 public class LinkManagerService : ILinkManager
 {
     private readonly IShortLinkGenerator _shortLinkGenerator;
-    private readonly ILinkRepository _linkRepository;
+    private readonly Func<ILinkRepository> _linkRepositoryFactory;
     private readonly IEventDispatcher _eventDispatcher;
 
-    public LinkManagerService(IShortLinkGenerator shortLinkGenerator, ILinkRepository linkRepository, IEventDispatcher eventDispatcher)
+    public LinkManagerService(IShortLinkGenerator shortLinkGenerator, Func<ILinkRepository> linkRepositoryFactory, IEventDispatcher eventDispatcher)
     {
         _shortLinkGenerator = shortLinkGenerator;
-        _linkRepository = linkRepository;
+        _linkRepositoryFactory = linkRepositoryFactory;
         _eventDispatcher = eventDispatcher;
     }
 
@@ -27,15 +27,18 @@ public class LinkManagerService : ILinkManager
 
             sourceLink.ShortName = shortLink;
         }
+        using var linkRepository = _linkRepositoryFactory();
 
-        await _linkRepository.CreateLinkAsync(sourceLink);
+        await linkRepository.CreateLinkAsync(sourceLink);
 
         return sourceLink.ShortName;
     }
 
     public async Task<string> GetFullUrlAsync(string shortLinkName)
     {
-        var sourceLink = await _linkRepository.GetAsync(shortLinkName);
+        using var linkRepository = _linkRepositoryFactory();
+
+        var sourceLink = await linkRepository.GetAsync(shortLinkName);
 
         if (sourceLink == null)
         {

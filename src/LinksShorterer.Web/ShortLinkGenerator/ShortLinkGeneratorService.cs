@@ -8,17 +8,18 @@ public class ShortLinkGeneratorService : IShortLinkGenerator
     private const int _shortUrlLength = 7;
 
     private readonly Random _random = new();
-    private readonly ILinkRepository _linkRepository;
+    private readonly Func<ILinkRepository> _linkRepositoryFactory;
 
-    public ShortLinkGeneratorService(ILinkRepository linkRepository)
+    public ShortLinkGeneratorService(Func<ILinkRepository> linkRepositoryFactory)
     {
-        _linkRepository = linkRepository;
+        _linkRepositoryFactory = linkRepositoryFactory;
     }
 
     public async Task<string> GenerateShortLinkAsync()
     {
         var charArray = new char[_shortUrlLength];
         string result;
+        using var linkRepository = _linkRepositoryFactory();
 
         do
         {
@@ -28,7 +29,7 @@ public class ShortLinkGeneratorService : IShortLinkGenerator
                 charArray[i] = _alphabet[randomIndex];
             }
             result = new string(charArray);
-        } while (await _linkRepository.IsLinkExistsAsync(result));
+        } while (await linkRepository.IsLinkExistsAsync(result));
 
         return result;
     }

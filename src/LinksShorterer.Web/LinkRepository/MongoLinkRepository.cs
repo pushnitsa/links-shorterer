@@ -23,4 +23,9 @@ public class MongoLinkRepository : ILinkRepository
     {
         throw new NotImplementedException();
     }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
 }

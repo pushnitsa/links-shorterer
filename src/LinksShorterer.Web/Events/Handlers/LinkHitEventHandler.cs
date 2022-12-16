@@ -5,15 +5,17 @@ namespace LinksShorterer.Events.Handlers;
 
 public class LinkHitEventHandler : IEventListener<LinkHit>
 {
-    private readonly ILinkRepository _linkRepository;
+    private readonly Func<ILinkRepository> _linkRepositoryFactory;
 
-    public LinkHitEventHandler(ILinkRepository linkRepository)
+    public LinkHitEventHandler(Func<ILinkRepository> linkRepositoryFactory)
     {
-        _linkRepository = linkRepository;
+        _linkRepositoryFactory = linkRepositoryFactory;
     }
 
     public async Task HandleAsync(LinkHit @event)
     {
-        await _linkRepository.IncreaseLinkHitsAsync(@event.ShortLinkName);
+        using var linkRepository = _linkRepositoryFactory();
+
+        await linkRepository.IncreaseLinkHitsAsync(@event.ShortLinkName);
     }
 }

@@ -22,6 +22,7 @@ builder.Services.AddTransient<IRedirector>(x => x.GetRequiredService<LinksServic
 builder.Services.AddTransient<ILinkManager, LinkManagerService>();
 builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();
 builder.Services.AddTransient<ILinkRepository, LocalStorageLinkRepository>();
+builder.Services.AddSingleton<Func<ILinkRepository>>(x => () => x.GetRequiredService<ILinkRepository>());
 
 builder.Services.AddSingleton<EventManagerImpl>();
 builder.Services.AddTransient<IEventManager>(x => x.GetRequiredService<EventManagerImpl>());

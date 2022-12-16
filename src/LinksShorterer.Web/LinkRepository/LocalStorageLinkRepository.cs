@@ -66,6 +66,11 @@ public class LocalStorageLinkRepository : ILinkRepository
         return Task.CompletedTask;
     }
 
+    public void Dispose()
+    {
+        // Here is nothing to do
+    }
+
 
     private List<LinksData> ReadData()
     {

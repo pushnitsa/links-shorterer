@@ -2,7 +2,7 @@
 
 namespace LinksShorterer.LinkRepository;
 
-public interface ILinkRepository
+public interface ILinkRepository : IDisposable
 {
     Task CreateLinkAsync(SourceLink sourceLink);
     Task<SourceLink?> GetAsync(string shortLinkName);
