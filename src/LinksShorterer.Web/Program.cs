@@ -32,7 +32,7 @@ builder.Services.AddTransient<IEventDispatcher>(x => x.GetRequiredService<EventM
 builder.Services.AddTransient<LinkHitEventHandler>();
 
 // Configuring options
-builder.Configuration.GetSection("MongoDB").Get<MongoOptions>();
+builder.Services.Configure<MongoOptions>(builder.Configuration.GetSection("MongoDB"));
 
 var app = builder.Build();
 
