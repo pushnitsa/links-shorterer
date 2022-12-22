@@ -75,9 +75,9 @@ public class MongoLinkRepository : ILinkRepository
     public async Task<bool> IsLinkExistsAsync(string shortLinkName)
     {
         var filter = Builders<MongoLink>.Filter.Eq(nameof(MongoLink.ShortLinkName), shortLinkName);
-        var result = await _mongoLinkCollection.Find(filter).ToListAsync();
+        var result = await _mongoLinkCollection.Find(filter).AnyAsync();
 
-        return result.Any();
+        return result;
     }
 
     public void Dispose()
