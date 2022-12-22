@@ -68,7 +68,7 @@ public class MongoLinkRepository : ILinkRepository
         {
             link.Hits++;
 
-            filter = _filterDefinitionBuilder.Eq("_id", link.Id);
+            filter = _filterDefinitionBuilder.Eq(x => x.Id, link.Id);
             var update = Builders<MongoLink>.Update.Set(x => x.Hits, link.Hits);
 
             await _mongoLinkCollection.UpdateOneAsync(filter, update);
