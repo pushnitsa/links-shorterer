@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{80C8F02D-647
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0CCF1307-B260-403A-AAB3-140192C5017A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksShorterer.Tests", "LinksShorterer.Tests\LinksShorterer.Tests.csproj", "{743E36F5-818F-443F-A876-0D1D90A44F25}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinksShorterer.Tests", "test\LinksShorterer.Tests\LinksShorterer.Tests.csproj", "{743E36F5-818F-443F-A876-0D1D90A44F25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
