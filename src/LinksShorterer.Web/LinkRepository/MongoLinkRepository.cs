@@ -10,6 +10,9 @@ public class MongoLinkRepository : ILinkRepository
     private readonly IMongoClient _mongoClient;
     private readonly IMongoDatabase _mongoDatabase;
     private readonly IMongoCollection<MongoLink> _mongoLinkCollection;
+
+    private readonly FilterDefinitionBuilder<MongoLink> _filterDefinitionBuilder = Builders<MongoLink>.Filter;
+
     public MongoLinkRepository(IConfiguration configuration, IOptions<MongoOptions> option)
     {
         _mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
@@ -35,7 +38,7 @@ public class MongoLinkRepository : ILinkRepository
 
     public async Task<SourceLink?> GetAsync(string shortLinkName)
     {
-        var filter = Builders<MongoLink>.Filter.Eq(nameof(MongoLink.ShortLinkName), shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).ToListAsync();
 
         var link = result.FirstOrDefault();
@@ -56,7 +59,7 @@ public class MongoLinkRepository : ILinkRepository
 
     public async Task IncreaseLinkHitsAsync(string shortLinkName)
     {
-        var filter = Builders<MongoLink>.Filter.Eq(nameof(MongoLink.ShortLinkName), shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).ToListAsync();
 
         var link = result.FirstOrDefault();
@@ -65,8 +68,8 @@ public class MongoLinkRepository : ILinkRepository
         {
             link.Hits++;
 
-            filter = Builders<MongoLink>.Filter.Eq("_id", link.Id);
-            var update = Builders<MongoLink>.Update.Set(nameof(MongoLink.Hits), link.Hits);
+            filter = _filterDefinitionBuilder.Eq("_id", link.Id);
+            var update = Builders<MongoLink>.Update.Set(x => x.Hits, link.Hits);
 
             await _mongoLinkCollection.UpdateOneAsync(filter, update);
         }
@@ -74,7 +77,7 @@ public class MongoLinkRepository : ILinkRepository
 
     public async Task<bool> IsLinkExistsAsync(string shortLinkName)
     {
-        var filter = Builders<MongoLink>.Filter.Eq(nameof(MongoLink.ShortLinkName), shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).AnyAsync();
 
         return result;
