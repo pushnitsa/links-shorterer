@@ -1,9 +1,4 @@
 <template>
-    <!--<nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
-    </nav>
-    <router-view /> -->
     <!-- Header -->
     <header>
         <!-- Fixed navbar -->
@@ -24,13 +19,6 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item">
-                            <!--<a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="#"
-                            >
-                                Home
-                            </a>-->
                             <router-link class="nav-link" to="/">
                                 Home
                             </router-link>
