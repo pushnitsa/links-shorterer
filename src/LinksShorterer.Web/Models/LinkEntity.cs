@@ -4,9 +4,9 @@ namespace LinksShorterer.Models;
 
 public class LinkEntity : IEntity
 {
-    public LinkEntity(string shortLinkName, string fullUrl)
+    public LinkEntity(string shortName, string fullUrl)
     {
-        ShortName = shortLinkName;
+        ShortName = shortName;
         FullUrl = fullUrl;
     }
 
