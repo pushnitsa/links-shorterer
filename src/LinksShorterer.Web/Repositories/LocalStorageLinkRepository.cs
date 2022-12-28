@@ -4,66 +4,103 @@ using System.Text.Json;
 
 namespace LinksShorterer.Repositories;
 
-public class LocalStorageLinkRepository //: ILinkRepository
+public class LocalStorageLinkRepository : ILinkRepository
 {
     private readonly string _filePath = "data.json";
     private readonly object _locker = new();
 
-    public Task CreateLinkAsync(Link sourceLink)
+    public Task<bool> IsLinkExistsAsync(string shortName)
     {
-        if (sourceLink.ShortName == null)
+        var data = ReadData();
+
+        return Task.FromResult(data.Any(x => x.ShortName == shortName));
+    }
+
+    public Task<LinkEntity?> GetAsync(string id)
+    {
+        var data = ReadData();
+
+        var result = data.Where(x => x.Id == new Guid(id))
+            .FirstOrDefault();
+
+        return Task.FromResult(result);
+    }
+
+    public Task<IReadOnlyCollection<LinkEntity>> FindAsync(ISpecification<LinkEntity> specification)
+    {
+        var data = ReadData();
+        IQueryable<LinkEntity> query;
+
+        if (specification.Criteria != null)
         {
-            throw new ArgumentNullException(nameof(sourceLink.ShortName), "Short name must not be empty");
+            query = data.AsQueryable().Where(specification.Criteria);
+        }
+        else
+        {
+            query = data.AsQueryable();
         }
 
-        var data = ReadData();
-        data.Add(new LinksData
+        query = query.Take(specification.Take);
+
+        if (specification.Skip.HasValue)
         {
-            FullUrl = sourceLink.FullUrl,
-            ShortLinkName = sourceLink.ShortName,
-        });
+            query = query.Skip(specification.Skip.Value);
+        }
+
+        var result = query.ToList();
+
+        return Task.FromResult((IReadOnlyCollection<LinkEntity>)result);
+    }
+
+    public Task SaveAsync(LinkEntity entity)
+    {
+        var data = ReadData();
+
+        var originEntity = data.FirstOrDefault(x => x.Id == entity.Id);
+
+        if (originEntity != null)
+        {
+            // Update
+            originEntity.FullUrl = entity.FullUrl;
+            originEntity.ShortName = entity.ShortName;
+            originEntity.Hits = entity.Hits;
+        }
+        else
+        {
+            // Create
+            entity.Id = Guid.NewGuid();
+            data.Add(entity);
+        }
 
         WriteData(data);
 
         return Task.CompletedTask;
     }
 
-    public Task<bool> IsLinkExistsAsync(string shortLinkName)
+    public Task<int> CountAsync(ISpecification<LinkEntity> specification)
     {
         var data = ReadData();
+        IQueryable<LinkEntity> query;
 
-        return Task.FromResult(data.Any(x => x.ShortLinkName == shortLinkName));
-    }
+        if (specification.Criteria != null)
+        {
+            query = data.AsQueryable().Where(specification.Criteria);
+        }
+        else
+        {
+            query = data.AsQueryable();
+        }
 
-    public Task<Link?> GetAsync(string shortLinkName)
-    {
-        var data = ReadData();
-
-        var result = data.Where(x => x.ShortLinkName.Equals(shortLinkName, StringComparison.OrdinalIgnoreCase))
-            .Select(x => new Link
-            {
-                FullUrl = x.FullUrl,
-                ShortName = x.ShortLinkName,
-            })
-            .FirstOrDefault();
+        var result = query.Count();
 
         return Task.FromResult(result);
     }
 
-    public Task IncreaseLinkHitsAsync(string shortLinkName)
+    public Task<int> CountAsync()
     {
         var data = ReadData();
 
-        var entity = data.FirstOrDefault(x => x.ShortLinkName == shortLinkName);
-
-        if (entity != null)
-        {
-            entity.Hits++;
-
-            WriteData(data);
-        }
-
-        return Task.CompletedTask;
+        return Task.FromResult(data.Count);
     }
 
     public void Dispose()
@@ -72,7 +109,7 @@ public class LocalStorageLinkRepository //: ILinkRepository
     }
 
 
-    private List<LinksData> ReadData()
+    private List<LinkEntity> ReadData()
     {
         lock (_locker)
         {
@@ -84,13 +121,13 @@ public class LocalStorageLinkRepository //: ILinkRepository
 
             var rawJson = Encoding.Default.GetString(buffer);
 
-            var result = JsonSerializer.Deserialize<List<LinksData>>(rawJson == string.Empty ? "[]" : rawJson);
+            var result = JsonSerializer.Deserialize<List<LinkEntity>>(rawJson == string.Empty ? "[]" : rawJson);
 
-            return result ?? new List<LinksData>();
+            return result ?? new List<LinkEntity>();
         }
     }
 
-    private void WriteData(List<LinksData> data)
+    private void WriteData(List<LinkEntity> data)
     {
         lock (_locker)
         {
@@ -102,18 +139,5 @@ public class LocalStorageLinkRepository //: ILinkRepository
 
             fileStream.Write(buffer);
         }
-    }
-
-    private class LinksData
-    {
-        public LinksData()
-        {
-            FullUrl = string.Empty;
-            ShortLinkName = string.Empty;
-        }
-
-        public string FullUrl { get; set; }
-        public string ShortLinkName { get; set; }
-        public int Hits { get; set; }
     }
 }
