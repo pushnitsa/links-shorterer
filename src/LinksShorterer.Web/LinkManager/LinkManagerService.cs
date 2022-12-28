@@ -1,7 +1,7 @@
 ﻿using LinksShorterer.EventManager;
 using LinksShorterer.Events;
-using LinksShorterer.LinkRepository;
 using LinksShorterer.Models;
+using LinksShorterer.Repositories;
 using LinksShorterer.ShortLinkGenerator;
 
 namespace LinksShorterer.LinkManager;

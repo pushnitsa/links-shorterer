@@ -1,5 +1,5 @@
-﻿using LinksShorterer.LinkRepository;
-using LinksShorterer.Models;
+﻿using LinksShorterer.Models;
+using LinksShorterer.Repositories;
 
 namespace LinksShorterer.ShortLinkSearch;
 

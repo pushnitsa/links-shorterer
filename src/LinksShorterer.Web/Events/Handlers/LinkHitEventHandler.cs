@@ -1,5 +1,5 @@
 ﻿using LinksShorterer.EventManager;
-using LinksShorterer.LinkRepository;
+using LinksShorterer.Repositories;
 
 namespace LinksShorterer.Events.Handlers;
 

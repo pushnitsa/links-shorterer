@@ -1,7 +1,7 @@
 ﻿using LinksShorterer.Models;
 using System.Linq.Expressions;
 
-namespace LinksShorterer.LinkRepository;
+namespace LinksShorterer.Repositories;
 
 public class LinkEntitySpecification : ISpecification<LinkEntity>
 {

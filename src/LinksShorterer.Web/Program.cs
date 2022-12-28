@@ -1,8 +1,8 @@
 using LinksShorterer.EventManager;
 using LinksShorterer.Events.Handlers;
 using LinksShorterer.LinkManager;
-using LinksShorterer.LinkRepository;
 using LinksShorterer.Options;
+using LinksShorterer.Repositories;
 using LinksShorterer.ShortererService;
 using LinksShorterer.ShortLinkGenerator;
 using LinksShorterer.ShortLinkSearch;

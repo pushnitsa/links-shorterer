@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace LinksShorterer.LinkRepository;
+namespace LinksShorterer.Repositories;
 
 public class LocalStorageLinkRepository //: ILinkRepository
 {

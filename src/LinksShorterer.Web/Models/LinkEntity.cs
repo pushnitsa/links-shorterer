@@ -1,4 +1,4 @@
-﻿using LinksShorterer.LinkRepository;
+﻿using LinksShorterer.Repositories;
 
 namespace LinksShorterer.Models;
 

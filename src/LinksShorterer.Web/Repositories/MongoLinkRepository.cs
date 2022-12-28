@@ -5,7 +5,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace LinksShorterer.LinkRepository;
+namespace LinksShorterer.Repositories;
 
 public class MongoLinkRepository : ILinkRepository
 {
@@ -32,9 +32,9 @@ public class MongoLinkRepository : ILinkRepository
         await _mongoLinkCollection.InsertOneAsync(linkEntity);
     }
 
-    public async Task<LinkEntity?> GetAsync(string shortLinkName)
+    public async Task<LinkEntity?> GetAsync(string id)
     {
-        var filter = _filterDefinitionBuilder.Eq(x => x.ShortName, shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.Id, new Guid(id));
         var result = await _mongoLinkCollection.Find(filter).ToListAsync();
 
         return result.FirstOrDefault();
@@ -68,6 +68,11 @@ public class MongoLinkRepository : ILinkRepository
         var result = await query.ToListAsync();
 
         return result;
+    }
+
+    public Task<LinkEntity> SaveAsync(LinkEntity entity)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<int> CountAsync()

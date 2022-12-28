@@ -1,4 +1,4 @@
-﻿namespace LinksShorterer.LinkRepository;
+﻿namespace LinksShorterer.Repositories;
 
 public interface IEntity
 {

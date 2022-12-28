@@ -1,6 +1,6 @@
 ﻿using LinksShorterer.LinkManager;
-using LinksShorterer.LinkRepository;
 using LinksShorterer.Models;
+using LinksShorterer.Repositories;
 
 namespace LinksShorterer.ShortererService;
 

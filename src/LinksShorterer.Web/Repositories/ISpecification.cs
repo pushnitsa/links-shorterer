@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace LinksShorterer.LinkRepository;
+namespace LinksShorterer.Repositories;
 
 public interface ISpecification<T>
 {
