@@ -32,7 +32,7 @@ public class LinkManagerService : ILinkManager
 
         using var linkRepository = _linkRepositoryFactory();
 
-        await linkRepository.CreateLinkAsync(entity);
+        await linkRepository.SaveAsync(entity);
 
         return sourceLink.ShortName;
     }
@@ -41,20 +41,18 @@ public class LinkManagerService : ILinkManager
     {
         using var linkRepository = _linkRepositoryFactory();
 
-        var sourceLink = await linkRepository.GetAsync(shortLinkName);
+        var linkSpecification = new LinkEntitySpecification(shortLinkName, 1, 0);
+        var linkEntity = (await linkRepository.FindAsync(linkSpecification)).FirstOrDefault();
 
-        if (sourceLink == null)
+        if (linkEntity == null)
         {
             throw new InvalidOperationException($"Short link was not found: {shortLinkName}");
         }
 
-        var @event = new LinkHit
-        {
-            ShortLinkName = shortLinkName,
-        };
+        var @event = new LinkHit(linkEntity.Id.ToString(), linkEntity.ShortName);
 
         await _eventDispatcher.DispatchAsync(@event);
 
-        return sourceLink.FullUrl;
+        return linkEntity.FullUrl;
     }
 }

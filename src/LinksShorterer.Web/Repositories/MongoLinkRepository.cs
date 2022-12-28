@@ -22,16 +22,6 @@ public class MongoLinkRepository : ILinkRepository
         _mongoLinkCollection = _mongoDatabase.GetCollection<LinkEntity>("links");
     }
 
-    public async Task CreateLinkAsync(LinkEntity linkEntity)
-    {
-        if (string.IsNullOrEmpty(linkEntity.ShortName))
-        {
-            throw new ArgumentNullException(nameof(linkEntity.ShortName), "Short link name must be filled");
-        }
-
-        await _mongoLinkCollection.InsertOneAsync(linkEntity);
-    }
-
     public async Task<LinkEntity?> GetAsync(string id)
     {
         var filter = _filterDefinitionBuilder.Eq(x => x.Id, new Guid(id));
@@ -70,9 +60,19 @@ public class MongoLinkRepository : ILinkRepository
         return result;
     }
 
-    public Task<LinkEntity> SaveAsync(LinkEntity entity)
+    public async Task SaveAsync(LinkEntity entity)
     {
-        throw new NotImplementedException();
+        var existFilter = _filterDefinitionBuilder.Eq(x => x.Id, entity.Id);
+        var isEntityExist = await _mongoLinkCollection.Find(existFilter).AnyAsync();
+
+        if (isEntityExist)
+        {
+            await _mongoLinkCollection.ReplaceOneAsync(existFilter, entity);
+        }
+        else
+        {
+            await _mongoLinkCollection.InsertOneAsync(entity);
+        }
     }
 
     public async Task<int> CountAsync()
@@ -100,26 +100,6 @@ public class MongoLinkRepository : ILinkRepository
         var result = await query.CountDocumentsAsync();
 
         return Convert.ToInt32(result);
-    }
-
-    public Task IncreaseLinkHitsAsync(string shortLinkName)
-    {
-        /*var filter = _filterDefinitionBuilder.Eq(x => x.ShortName, shortLinkName);
-        var result = await _mongoLinkCollection.Find(filter).ToListAsync();
-
-        var link = result.FirstOrDefault();
-
-        if (link != null)
-        {
-            link.Hits++;
-
-            filter = _filterDefinitionBuilder.Eq(x => x.Id, link.Id);
-            var update = Builders<MongoLink>.Update.Set(x => x.Hits, link.Hits);
-
-            await _mongoLinkCollection.UpdateOneAsync(filter, update);
-        }*/
-
-        return Task.CompletedTask;
     }
 
     public async Task<bool> IsLinkExistsAsync(string shortLinkName)

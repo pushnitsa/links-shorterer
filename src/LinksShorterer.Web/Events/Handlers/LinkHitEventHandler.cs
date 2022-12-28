@@ -16,6 +16,20 @@ public class LinkHitEventHandler : IEventListener<LinkHit>
     {
         using var linkRepository = _linkRepositoryFactory();
 
-        await linkRepository.IncreaseLinkHitsAsync(@event.ShortLinkName);
+        var linkEntity = await linkRepository.GetAsync(@event.Id);
+
+        if (linkEntity != null)
+        {
+            if (linkEntity.Hits.HasValue)
+            {
+                linkEntity.Hits++;
+            }
+            else
+            {
+                linkEntity.Hits = 1;
+            }
+
+            await linkRepository.SaveAsync(linkEntity);
+        }
     }
 }

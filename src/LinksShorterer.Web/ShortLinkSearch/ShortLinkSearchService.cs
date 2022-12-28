@@ -26,6 +26,7 @@ public class ShortLinkSearchService : IShortLinkSearch
             Id = x.Id,
             FullUrl = x.FullUrl,
             ShortName = x.ShortName,
+            Hits = x.Hits,
         }).ToList();
 
         result.TotalCount = entityCount;

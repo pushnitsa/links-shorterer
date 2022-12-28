@@ -2,5 +2,12 @@
 
 public class LinkHit : IEvent
 {
-    public string ShortLinkName { get; set; }
+    public LinkHit(string id, string shortName)
+    {
+        Id = id;
+        ShortName = shortName;
+    }
+
+    public string Id { get; set; }
+    public string ShortName { get; set; }
 }

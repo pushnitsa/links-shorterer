@@ -11,4 +11,6 @@ public class Link
     public bool IsPermanent { get; set; }
 
     public DateTime? ExpirationDate { get; set; }
+
+    public int? Hits { get; set; }
 }

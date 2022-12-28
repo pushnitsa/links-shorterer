@@ -15,4 +15,6 @@ public class LinkEntity : IEntity
     public string ShortName { get; set; }
 
     public string FullUrl { get; set; }
+
+    public int? Hits { get; set; }
 }
