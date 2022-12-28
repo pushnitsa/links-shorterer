@@ -1,7 +1,9 @@
 ﻿using LinksShorterer.Models;
 using LinksShorterer.Options;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace LinksShorterer.LinkRepository;
 
@@ -9,57 +11,95 @@ public class MongoLinkRepository : ILinkRepository
 {
     private readonly IMongoClient _mongoClient;
     private readonly IMongoDatabase _mongoDatabase;
-    private readonly IMongoCollection<MongoLink> _mongoLinkCollection;
+    private readonly IMongoCollection<LinkEntity> _mongoLinkCollection;
 
-    private readonly FilterDefinitionBuilder<MongoLink> _filterDefinitionBuilder = Builders<MongoLink>.Filter;
+    private readonly FilterDefinitionBuilder<LinkEntity> _filterDefinitionBuilder = Builders<LinkEntity>.Filter;
 
     public MongoLinkRepository(IConfiguration configuration, IOptions<MongoOptions> option)
     {
         _mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
         _mongoDatabase = _mongoClient.GetDatabase(option.Value.DatabaseName);
-        _mongoLinkCollection = _mongoDatabase.GetCollection<MongoLink>("links");
+        _mongoLinkCollection = _mongoDatabase.GetCollection<LinkEntity>("links");
     }
 
-    public async Task CreateLinkAsync(SourceLink sourceLink)
+    public async Task CreateLinkAsync(LinkEntity linkEntity)
     {
-        if (string.IsNullOrEmpty(sourceLink.ShortName))
+        if (string.IsNullOrEmpty(linkEntity.ShortName))
         {
-            throw new ArgumentNullException(nameof(sourceLink.ShortName), "Short link name must be filled");
+            throw new ArgumentNullException(nameof(linkEntity.ShortName), "Short link name must be filled");
         }
 
-        var mongoLink = new MongoLink
-        {
-            FullUrl = sourceLink.FullUrl,
-            ShortLinkName = sourceLink.ShortName,
-        };
-
-        await _mongoLinkCollection.InsertOneAsync(mongoLink);
+        await _mongoLinkCollection.InsertOneAsync(linkEntity);
     }
 
-    public async Task<SourceLink?> GetAsync(string shortLinkName)
+    public async Task<LinkEntity?> GetAsync(string shortLinkName)
     {
-        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.ShortName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).ToListAsync();
 
-        var link = result.FirstOrDefault();
-
-        var sourceLink = default(SourceLink);
-
-        if (link != null)
-        {
-            sourceLink = new SourceLink
-            {
-                ShortName = link.ShortLinkName,
-                FullUrl = link.FullUrl,
-            };
-        }
-
-        return sourceLink;
+        return result.FirstOrDefault();
     }
 
-    public async Task IncreaseLinkHitsAsync(string shortLinkName)
+    public async Task<IReadOnlyCollection<LinkEntity>> FindAsync(ISpecification<LinkEntity> specification)
     {
-        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
+        IFindFluent<LinkEntity, LinkEntity>? query;
+
+        if (specification.Take == 0)
+        {
+            return new List<LinkEntity>();
+        }
+
+        if (specification.Criteria != null)
+        {
+            query = _mongoLinkCollection.Find(specification.Criteria);
+        }
+        else
+        {
+            query = _mongoLinkCollection.Find(new BsonDocument());
+        }
+
+        if (specification.Skip != null)
+        {
+            query = query.Skip(specification.Skip.Value);
+        }
+
+        query = query.Limit(specification.Take);
+
+        var result = await query.ToListAsync();
+
+        return result;
+    }
+
+    public async Task<int> CountAsync()
+    {
+        var query = _mongoLinkCollection.Find(new BsonDocument());
+
+        var result = await query.CountDocumentsAsync();
+
+        return Convert.ToInt32(result);
+    }
+
+    public async Task<int> CountAsync(ISpecification<LinkEntity> specification)
+    {
+        IFindFluent<LinkEntity, LinkEntity>? query;
+
+        if (specification.Criteria != null)
+        {
+            query = _mongoLinkCollection.Find(specification.Criteria);
+        }
+        else
+        {
+            query = _mongoLinkCollection.Find(new BsonDocument());
+        }
+
+        var result = await query.CountDocumentsAsync();
+
+        return Convert.ToInt32(result);
+    }
+
+    public Task IncreaseLinkHitsAsync(string shortLinkName)
+    {
+        /*var filter = _filterDefinitionBuilder.Eq(x => x.ShortName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).ToListAsync();
 
         var link = result.FirstOrDefault();
@@ -72,12 +112,14 @@ public class MongoLinkRepository : ILinkRepository
             var update = Builders<MongoLink>.Update.Set(x => x.Hits, link.Hits);
 
             await _mongoLinkCollection.UpdateOneAsync(filter, update);
-        }
+        }*/
+
+        return Task.CompletedTask;
     }
 
     public async Task<bool> IsLinkExistsAsync(string shortLinkName)
     {
-        var filter = _filterDefinitionBuilder.Eq(x => x.ShortLinkName, shortLinkName);
+        var filter = _filterDefinitionBuilder.Eq(x => x.ShortName, shortLinkName);
         var result = await _mongoLinkCollection.Find(filter).AnyAsync();
 
         return result;
@@ -87,4 +129,5 @@ public class MongoLinkRepository : ILinkRepository
     {
         // Nothing is to do here
     }
+
 }

@@ -4,5 +4,5 @@ namespace LinksShorterer.ShortererService;
 
 public interface IShorterer
 {
-    Task<string> GetShortLinkAsync(SourceLink link);
+    Task<string> GetShortLinkAsync(Link link);
 }

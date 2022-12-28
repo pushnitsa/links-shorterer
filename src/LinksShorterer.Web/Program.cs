@@ -5,6 +5,7 @@ using LinksShorterer.LinkRepository;
 using LinksShorterer.Options;
 using LinksShorterer.ShortererService;
 using LinksShorterer.ShortLinkGenerator;
+using LinksShorterer.ShortLinkSearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<LinksService>();
 builder.Services.AddTransient<IShorterer>(x => x.GetRequiredService<LinksService>());
 builder.Services.AddTransient<IRedirector>(x => x.GetRequiredService<LinksService>());
+builder.Services.AddTransient<IShortLinkSearch, ShortLinkSearchService>();
 
 builder.Services.AddTransient<ILinkManager, LinkManagerService>();
 builder.Services.AddTransient<IShortLinkGenerator, ShortLinkGeneratorService>();

@@ -1,7 +1,9 @@
 ﻿namespace LinksShorterer.Models;
 
-public class SourceLink
+public class Link
 {
+    public Guid Id { get; set; }
+
     public string FullUrl { get; set; }
 
     public string? ShortName { get; set; }

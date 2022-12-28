@@ -4,12 +4,12 @@ using System.Text.Json;
 
 namespace LinksShorterer.LinkRepository;
 
-public class LocalStorageLinkRepository : ILinkRepository
+public class LocalStorageLinkRepository //: ILinkRepository
 {
     private readonly string _filePath = "data.json";
     private readonly object _locker = new();
 
-    public Task CreateLinkAsync(SourceLink sourceLink)
+    public Task CreateLinkAsync(Link sourceLink)
     {
         if (sourceLink.ShortName == null)
         {
@@ -35,12 +35,12 @@ public class LocalStorageLinkRepository : ILinkRepository
         return Task.FromResult(data.Any(x => x.ShortLinkName == shortLinkName));
     }
 
-    public Task<SourceLink?> GetAsync(string shortLinkName)
+    public Task<Link?> GetAsync(string shortLinkName)
     {
         var data = ReadData();
 
         var result = data.Where(x => x.ShortLinkName.Equals(shortLinkName, StringComparison.OrdinalIgnoreCase))
-            .Select(x => new SourceLink
+            .Select(x => new Link
             {
                 FullUrl = x.FullUrl,
                 ShortName = x.ShortLinkName,

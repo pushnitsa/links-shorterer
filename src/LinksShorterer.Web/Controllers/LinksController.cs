@@ -1,5 +1,6 @@
 ﻿using LinksShorterer.Models;
 using LinksShorterer.ShortererService;
+using LinksShorterer.ShortLinkSearch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinksShorterer.Controllers;
@@ -10,16 +11,18 @@ public class LinksController : ControllerBase
 {
     private readonly IShorterer _shorterer;
     private readonly IRedirector _redirector;
+    private readonly IShortLinkSearch _shortLinkSearch;
 
-    public LinksController(IShorterer shorterer, IRedirector redirector)
+    public LinksController(IShorterer shorterer, IRedirector redirector, IShortLinkSearch shortLinkSearch)
     {
         _shorterer = shorterer;
         _redirector = redirector;
+        _shortLinkSearch = shortLinkSearch;
     }
 
     [HttpPost]
     [Route("generate")]
-    public async Task<ActionResult<ResultLink>> GenerateShortLink([FromBody] SourceLink link)
+    public async Task<ActionResult<ResultLink>> GenerateShortLink([FromBody] Link link)
     {
         var result = new ResultLink();
 
@@ -32,6 +35,15 @@ public class LinksController : ControllerBase
         {
             result.Errors.Add(ex.Message);
         }
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("search")]
+    public async Task<ActionResult<ShortLinkSearchResult>> SearchShortLinks([FromBody] ShortLinkSearchCriteria searchCriteria)
+    {
+        var result = await _shortLinkSearch.SearchAsync(searchCriteria);
 
         return Ok(result);
     }

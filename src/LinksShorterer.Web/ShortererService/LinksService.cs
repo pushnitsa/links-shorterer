@@ -15,7 +15,7 @@ public class LinksService : IShorterer, IRedirector
         _linkRepositoryFactory = linkRepositoryFactory;
     }
 
-    public async Task<string> GetShortLinkAsync(SourceLink link)
+    public async Task<string> GetShortLinkAsync(Link link)
     {
         using var linkRepository = _linkRepositoryFactory();
 

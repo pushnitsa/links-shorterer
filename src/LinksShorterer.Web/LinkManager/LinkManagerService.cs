@@ -19,7 +19,7 @@ public class LinkManagerService : ILinkManager
         _eventDispatcher = eventDispatcher;
     }
 
-    public async Task<string> CreateShortLinkAsync(SourceLink sourceLink)
+    public async Task<string> CreateShortLinkAsync(Link sourceLink)
     {
         if (string.IsNullOrEmpty(sourceLink.ShortName))
         {
@@ -27,9 +27,12 @@ public class LinkManagerService : ILinkManager
 
             sourceLink.ShortName = shortLink;
         }
+
+        var entity = new LinkEntity(sourceLink.ShortName, sourceLink.FullUrl);
+
         using var linkRepository = _linkRepositoryFactory();
 
-        await linkRepository.CreateLinkAsync(sourceLink);
+        await linkRepository.CreateLinkAsync(entity);
 
         return sourceLink.ShortName;
     }
