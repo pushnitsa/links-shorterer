@@ -32,21 +32,12 @@ public class MongoLinkRepository : ILinkRepository
 
     public async Task<IReadOnlyCollection<LinkEntity>> FindAsync(ISpecification<LinkEntity> specification)
     {
-        IFindFluent<LinkEntity, LinkEntity>? query;
-
         if (specification.Take == 0)
         {
             return new List<LinkEntity>();
         }
 
-        if (specification.Criteria != null)
-        {
-            query = _mongoLinkCollection.Find(specification.Criteria);
-        }
-        else
-        {
-            query = _mongoLinkCollection.Find(new BsonDocument());
-        }
+        var query = GetQuery(specification);
 
         if (specification.Skip != null)
         {
@@ -86,16 +77,7 @@ public class MongoLinkRepository : ILinkRepository
 
     public async Task<int> CountAsync(ISpecification<LinkEntity> specification)
     {
-        IFindFluent<LinkEntity, LinkEntity>? query;
-
-        if (specification.Criteria != null)
-        {
-            query = _mongoLinkCollection.Find(specification.Criteria);
-        }
-        else
-        {
-            query = _mongoLinkCollection.Find(new BsonDocument());
-        }
+        var query = GetQuery(specification);
 
         var result = await query.CountDocumentsAsync();
 
@@ -113,6 +95,23 @@ public class MongoLinkRepository : ILinkRepository
     public void Dispose()
     {
         // Nothing is to do here
+    }
+
+
+    private IFindFluent<LinkEntity, LinkEntity> GetQuery(ISpecification<LinkEntity> specification)
+    {
+        IFindFluent<LinkEntity, LinkEntity>? query;
+
+        if (specification.Criteria != null)
+        {
+            query = _mongoLinkCollection.Find(specification.Criteria);
+        }
+        else
+        {
+            query = _mongoLinkCollection.Find(new BsonDocument());
+        }
+
+        return query;
     }
 
 }
