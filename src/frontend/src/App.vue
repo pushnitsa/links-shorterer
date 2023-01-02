@@ -42,13 +42,13 @@
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <router-link class="nav-link" to="/links">
                                 <vue-feather
                                     type="align-justify"
                                     class="align-text-bottom"
                                 />
                                 Links
-                            </a>
+                            </router-link>
                         </li>
                         <li class="nav-item">
                             <router-link class="nav-link" to="/about">
