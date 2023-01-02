@@ -32,17 +32,13 @@
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a
-                                class="nav-link active"
-                                aria-current="page"
-                                href="#"
-                            >
+                            <router-link class="nav-link active" to="/">
                                 <vue-feather
                                     type="home"
                                     class="align-text-bottom"
                                 />
-                                Dashboard
-                            </a>
+                                Home
+                            </router-link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">
@@ -54,13 +50,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <router-link class="nav-link" to="/about">
                                 <vue-feather
                                     type="info"
                                     class="align-text-bottom"
                                 />
                                 About
-                            </a>
+                            </router-link>
                         </li>
                     </ul>
                 </div>
