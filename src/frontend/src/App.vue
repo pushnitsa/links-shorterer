@@ -32,6 +32,7 @@
                 <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
+                            <!--TODO: active links navigation-->
                             <router-link class="nav-link active" to="/">
                                 <vue-feather
                                     type="home"
