@@ -29,15 +29,11 @@ public class LocalStorageLinkRepository : ILinkRepository
     public Task<IReadOnlyCollection<LinkEntity>> FindAsync(ISpecification<LinkEntity> specification)
     {
         var data = ReadData();
-        IQueryable<LinkEntity> query;
+        var query = data.AsQueryable();
 
         if (specification.Criteria != null)
         {
-            query = data.AsQueryable().Where(specification.Criteria);
-        }
-        else
-        {
-            query = data.AsQueryable();
+            query = query.Where(specification.Criteria);
         }
 
         query = query.Take(specification.Take);
@@ -80,15 +76,11 @@ public class LocalStorageLinkRepository : ILinkRepository
     public Task<int> CountAsync(ISpecification<LinkEntity> specification)
     {
         var data = ReadData();
-        IQueryable<LinkEntity> query;
+        var query = data.AsQueryable();
 
         if (specification.Criteria != null)
         {
-            query = data.AsQueryable().Where(specification.Criteria);
-        }
-        else
-        {
-            query = data.AsQueryable();
+            query = query.Where(specification.Criteria);
         }
 
         var result = query.Count();
