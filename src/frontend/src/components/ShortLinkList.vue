@@ -25,6 +25,7 @@
                 </tr>
             </tbody>
         </table>
+        <h5 v-if="!links">Loading...</h5>
     </div>
 </template>
 
