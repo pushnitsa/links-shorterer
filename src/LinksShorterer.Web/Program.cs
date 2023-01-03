@@ -43,6 +43,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors(corsBuilder =>
+    {
+        corsBuilder.WithOrigins(builder.Configuration["AllowedHosts"])
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
 }
 var eventManager = app.Services.GetRequiredService<IEventManager>();
 eventManager.Subscribe(app.Services.GetRequiredService<LinkHitEventHandler>());
