@@ -18,4 +18,11 @@ export default {
             skip: skip,
         });
     },
+    createLink(fullUrl, shortName = null) {
+        return linksApiService.post("/generate", {
+            fullUrl,
+            shortName,
+            isPermanent: false,
+        });
+    },
 };
