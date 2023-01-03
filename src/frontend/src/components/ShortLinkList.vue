@@ -32,7 +32,17 @@
 <script>
 import LinksService from "@/services/LinksService";
 
+function reload(take, skip) {
+    return LinksService.getLinks(take, skip);
+}
+
 export default {
+    props: {
+        linksPerPage: {
+            type: Number,
+            default: 10,
+        },
+    },
     data() {
         return {
             links: null,
@@ -40,9 +50,16 @@ export default {
         };
     },
     created() {
-        LinksService.getLinks(20, 0).then((response) => {
+        reload(this.linksPerPage, 0).then((response) => {
             this.links = response.data.links;
         });
+    },
+    watch: {
+        linksPerPage(newValue) {
+            reload(newValue, 0).then((response) => {
+                this.links = response.data.links;
+            });
+        },
     },
 };
 </script>
