@@ -45,7 +45,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.UseCors(corsBuilder =>
     {
-        corsBuilder.WithOrigins(builder.Configuration["AllowedHost"])
+        corsBuilder.WithOrigins(builder.Configuration["AllowedHosts"])
         .AllowAnyMethod()
         .AllowAnyHeader();
     });
