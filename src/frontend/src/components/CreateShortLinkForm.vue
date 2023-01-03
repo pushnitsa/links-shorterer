@@ -4,9 +4,10 @@
             <div class="col-6 mb-4">
                 <label for="inputUrl" class="form-label">Url</label>
                 <input
-                    type="email"
+                    type="text"
                     class="form-control"
                     id="inputUrl"
+                    v-model="fullUrl"
                     aria-describedby="urlHelp"
                 />
                 <div id="urlHelp" class="form-text">
@@ -17,9 +18,10 @@
                         Short link name (optional)
                     </label>
                     <input
-                        type="email"
+                        type="text"
                         class="form-control"
                         id="inputShortLink"
+                        v-model="shortName"
                         aria-describedby="shortLinkHelp"
                     />
                     <div id="shortLinkHelp" class="form-text">
@@ -35,9 +37,19 @@
 </template>
 
 <script>
+import LinksService from "@/services/LinksService";
+
 export default {
+    data() {
+        return {
+            fullUrl: null,
+            shortName: null,
+        };
+    },
     methods: {
-        onSubmit() {},
+        onSubmit() {
+            LinksService.createLink(this.fullUrl, this.shortName);
+        },
     },
 };
 </script>
