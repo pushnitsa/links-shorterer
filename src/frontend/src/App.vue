@@ -33,7 +33,7 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <!--TODO: active links navigation-->
-                            <router-link class="nav-link active" to="/">
+                            <router-link class="nav-link" to="/">
                                 <vue-feather
                                     type="home"
                                     class="align-text-bottom"
