@@ -11,7 +11,14 @@
             </thead>
             <tbody>
                 <tr v-for="link in links" :key="link.id">
-                    <td>{{ link.shortName }}</td>
+                    <td>
+                        <a
+                            :href="`${followingServer}/${link.shortName}`"
+                            target="_blank"
+                        >
+                            {{ followingServer }}/{{ link.shortName }}
+                        </a>
+                    </td>
                     <td>{{ link.fullUrl }}</td>
                     <td>{{ link.hits }}</td>
                     <td>{{ link.isPermanent }}</td>
@@ -28,6 +35,7 @@ export default {
     data() {
         return {
             links: null,
+            followingServer: process.env.VUE_APP_URL_FOLLOWING_SERVER,
         };
     },
     created() {
