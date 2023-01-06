@@ -1,12 +1,12 @@
 ﻿using LinksShorterer.Models;
 using System.Linq.Expressions;
 
-namespace LinksShorterer.Repositories;
+namespace LinksShorterer.Repositories.Specifications;
 
-public class LinkEntitySpecification : ISpecification<LinkEntity>
+public class LinkEntitySearchSpecification : ISpecification<LinkEntity>
 {
 
-    public LinkEntitySpecification(string? searchPhrase, int take, int? skip)
+    public LinkEntitySearchSpecification(string? searchPhrase, int take, int? skip)
     {
         if (!string.IsNullOrEmpty(searchPhrase))
         {

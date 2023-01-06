@@ -1,5 +1,6 @@
 ﻿using LinksShorterer.Models;
 using LinksShorterer.Repositories;
+using LinksShorterer.Repositories.Specifications;
 
 namespace LinksShorterer.ShortLinkSearch;
 
@@ -14,7 +15,7 @@ public class ShortLinkSearchService : IShortLinkSearch
 
     public async Task<ShortLinkSearchResult> SearchAsync(ShortLinkSearchCriteria searchCriteria)
     {
-        var specification = new LinkEntitySpecification(searchCriteria.SearchPhrase, searchCriteria.Take, searchCriteria.Skip);
+        var specification = new LinkEntitySearchSpecification(searchCriteria.SearchPhrase, searchCriteria.Take, searchCriteria.Skip);
 
         var result = new ShortLinkSearchResult();
 

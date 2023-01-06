@@ -2,6 +2,7 @@
 using LinksShorterer.Events;
 using LinksShorterer.Models;
 using LinksShorterer.Repositories;
+using LinksShorterer.Repositories.Specifications;
 using LinksShorterer.ShortLinkGenerator;
 
 namespace LinksShorterer.LinkManager;
@@ -41,7 +42,7 @@ public class LinkManagerService : ILinkManager
     {
         using var linkRepository = _linkRepositoryFactory();
 
-        var linkSpecification = new LinkEntitySpecification(shortLinkName, 1, 0);
+        var linkSpecification = new LinkEntityGetByShortNameSpecification(shortLinkName);
         var linkEntity = (await linkRepository.FindAsync(linkSpecification)).FirstOrDefault();
 
         if (linkEntity == null)
