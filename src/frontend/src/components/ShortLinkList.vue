@@ -21,7 +21,7 @@
                         </a>
                     </td>
                     <td>{{ link.fullUrl }}</td>
-                    <td>{{ getDate(link.createdAt) }}</td>
+                    <td>{{ formatDate(link.createdAt) }}</td>
                     <td>{{ link.hits }}</td>
                     <td>{{ link.isPermanent }}</td>
                 </tr>
@@ -71,7 +71,7 @@ export default {
         },
     },
     methods: {
-        getDate(date) {
+        formatDate(date) {
             let dateObject = new Date(date);
             let result =
                 dateObject.getDate() +
