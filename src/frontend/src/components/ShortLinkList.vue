@@ -3,8 +3,9 @@
         <table class="table table-striped table-sm" v-if="links">
             <thead>
                 <tr>
-                    <th scope="col">Short name</th>
+                    <th scope="col">Short link</th>
                     <th scope="col">Url</th>
+                    <th scope="col">Created</th>
                     <th scope="col">Hits</th>
                     <th scope="col">Is permanent</th>
                 </tr>
@@ -20,11 +21,12 @@
                         </a>
                     </td>
                     <td>{{ link.fullUrl }}</td>
+                    <td>{{ getDate(link.createdAt) }}</td>
                     <td>{{ link.hits }}</td>
                     <td>{{ link.isPermanent }}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="text-end">
+                    <td colspan="5" class="text-end">
                         Total count: {{ totalCount }}
                     </td>
                 </tr>
@@ -66,6 +68,23 @@ export default {
             reload(newValue, 0).then((response) => {
                 this.links = response.data.links;
             });
+        },
+    },
+    methods: {
+        getDate(date) {
+            let dateObject = new Date(date);
+            let result =
+                dateObject.getDate() +
+                "/" +
+                (dateObject.getMonth() + 1) +
+                "/" +
+                dateObject.getFullYear() +
+                " " +
+                dateObject.getHours() +
+                ":" +
+                dateObject.getMinutes();
+
+            return result;
         },
     },
 };
