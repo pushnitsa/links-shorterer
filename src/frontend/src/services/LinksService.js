@@ -22,7 +22,7 @@ export default {
         return linksApiService.post("/generate", {
             fullUrl,
             shortName,
-            isPermanent: false,
+            isPermanent: true,
         });
     },
 };

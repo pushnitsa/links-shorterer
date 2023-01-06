@@ -14,7 +14,7 @@ public class ShortLinkSearchService : IShortLinkSearch
 
     public async Task<ShortLinkSearchResult> SearchAsync(ShortLinkSearchCriteria searchCriteria)
     {
-        var specification = new LinkEntitySpecification(searchCriteria.ShortName, searchCriteria.Take, searchCriteria.Skip);
+        var specification = new LinkEntitySpecification(searchCriteria.SearchPhrase, searchCriteria.Take, searchCriteria.Skip);
 
         var result = new ShortLinkSearchResult();
 
@@ -25,6 +25,7 @@ public class ShortLinkSearchService : IShortLinkSearch
         {
             Id = x.Id,
             FullUrl = x.FullUrl,
+            CreatedAt = x.CreatedAt,
             ShortName = x.ShortName,
             Hits = x.Hits,
         }).ToList();

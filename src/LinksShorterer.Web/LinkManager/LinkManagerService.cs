@@ -28,7 +28,7 @@ public class LinkManagerService : ILinkManager
             sourceLink.ShortName = shortLink;
         }
 
-        var entity = new LinkEntity(sourceLink.ShortName, sourceLink.FullUrl);
+        var entity = new LinkEntity(sourceLink.ShortName, sourceLink.FullUrl, sourceLink.IsPermanent, DateTime.UtcNow);
 
         using var linkRepository = _linkRepositoryFactory();
 

@@ -2,7 +2,7 @@
 
 public record ShortLinkSearchCriteria
 {
-    public string? ShortName { get; set; }
+    public string? SearchPhrase { get; set; }
     public int Take { get; set; } = 20;
     public int? Skip { get; set; }
 }

@@ -6,11 +6,11 @@ namespace LinksShorterer.Repositories;
 public class LinkEntitySpecification : ISpecification<LinkEntity>
 {
 
-    public LinkEntitySpecification(string? shortName, int take, int? skip)
+    public LinkEntitySpecification(string? searchPhrase, int take, int? skip)
     {
-        if (!string.IsNullOrEmpty(shortName))
+        if (!string.IsNullOrEmpty(searchPhrase))
         {
-            Criteria = x => x.ShortName == shortName;
+            Criteria = x => x.ShortName.Contains(searchPhrase) || x.FullUrl.Contains(searchPhrase);
         }
 
         Take = take;
