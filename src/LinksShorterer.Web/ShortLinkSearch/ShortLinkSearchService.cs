@@ -27,6 +27,7 @@ public class ShortLinkSearchService : IShortLinkSearch
             Id = x.Id,
             FullUrl = x.FullUrl,
             CreatedAt = x.CreatedAt,
+            IsPermanent = x.IsPermanent,
             ShortName = x.ShortName,
             Hits = x.Hits,
         }).ToList();
