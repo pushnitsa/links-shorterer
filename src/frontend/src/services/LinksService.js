@@ -13,10 +13,7 @@ const linksApiService = axios.create({
 
 export default {
     getLinks(take, skip) {
-        return linksApiService.post("/search", {
-            take: take,
-            skip: skip,
-        });
+        return linksApiService.post("/search", { take, skip });
     },
     createLink(fullUrl, shortName = null) {
         return linksApiService.post("/generate", {
