@@ -79,10 +79,8 @@ export default {
                     items.push({ value: this.pageCount - 2 });
                 }
 
-                if (elementsLeft > 0) {
-                    items.push({ value: this.pageCount - 1 });
-                    items.push({ value: this.pageCount });
-                }
+                items.push({ value: this.pageCount - 1 });
+                items.push({ value: this.pageCount });
             } else {
                 for (let i = 1; i <= this.pageCount; i++) {
                     items.push({ value: i });
