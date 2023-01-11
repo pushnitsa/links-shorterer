@@ -1,6 +1,8 @@
 <template>
     <div class="btn-group btn-group-sm" role="group">
-        <button type="button" class="btn btn-light">&lt;&lt;</button>
+        <button type="button" class="btn btn-light" @click="toFirstPage">
+            &lt;&lt;
+        </button>
         <button type="button" class="btn btn-light" @click="prevPage">
             &lt;
         </button>
@@ -22,7 +24,9 @@
         <button type="button" class="btn btn-light" @click="nextPage">
             &gt;
         </button>
-        <button type="button" class="btn btn-light">&gt;&gt;</button>
+        <button type="button" class="btn btn-light" @click="toLastPage">
+            &gt;&gt;
+        </button>
     </div>
 </template>
 
@@ -51,6 +55,9 @@ export default {
 
             this.$emit("navigate", { skip: skipValue.value.skip });
         },
+        toFirstPage() {
+            this.navigateTo(1);
+        },
         prevPage() {
             let targetPage = this.currentPage - 1;
 
@@ -60,6 +67,9 @@ export default {
             let targetPage = this.currentPage + 1;
 
             this.navigateTo(targetPage >= this.pages ? this.pages : targetPage);
+        },
+        toLastPage() {
+            this.navigateTo(this.pages);
         },
         rewind() {
             this.currentPage = 1;
