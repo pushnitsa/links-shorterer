@@ -78,10 +78,9 @@ export default {
         initialize() {
             this.itemsSkipArray = [];
             for (let i = 0; i < this.pages; i++) {
-                let skip = i * this.pageSize;
                 this.itemsSkipArray.push({
                     key: i + 1,
-                    value: { skip },
+                    value: { skip: i * this.pageSize },
                 });
             }
             this.navigateTo(this.currentPage);
