@@ -1,9 +1,9 @@
 <template>
     <div class="btn-group btn-group-sm" role="group">
-        <button type="button" class="btn btn-light" @click="toFirstPage">
+        <button type="button" class="btn btn-light" @click="toFirstPage()">
             &lt;&lt;
         </button>
-        <button type="button" class="btn btn-light" @click="prevPage">
+        <button type="button" class="btn btn-light" @click="prevPage()">
             &lt;
         </button>
         <button
@@ -19,12 +19,12 @@
         <!--<button type="button" class="btn btn-light">1</button>
         <button type="button" class="btn btn-light active">2</button>
         <button type="button" class="btn btn-light">...</button>
-        <button type="button" class="btn btn-light">8</button>
-        <button type="button" class="btn btn-light">9</button>-->
-        <button type="button" class="btn btn-light" @click="nextPage">
+        <button type="button" class="btn btn-light">9</button>
+        <button type="button" class="btn btn-light">10</button>-->
+        <button type="button" class="btn btn-light" @click="nextPage()">
             &gt;
         </button>
-        <button type="button" class="btn btn-light" @click="toLastPage">
+        <button type="button" class="btn btn-light" @click="toLastPage()">
             &gt;&gt;
         </button>
     </div>
