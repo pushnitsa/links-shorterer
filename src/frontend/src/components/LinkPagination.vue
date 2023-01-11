@@ -1,7 +1,9 @@
 <template>
     <div class="btn-group btn-group-sm" role="group">
         <button type="button" class="btn btn-light">&lt;&lt;</button>
-        <button type="button" class="btn btn-light">&lt;</button>
+        <button type="button" class="btn btn-light" @click="prevPage">
+            &lt;
+        </button>
         <button
             v-for="(page, index) in pages"
             :key="index"
@@ -17,7 +19,9 @@
         <button type="button" class="btn btn-light">...</button>
         <button type="button" class="btn btn-light">8</button>
         <button type="button" class="btn btn-light">9</button>-->
-        <button type="button" class="btn btn-light">&gt;</button>
+        <button type="button" class="btn btn-light" @click="nextPage">
+            &gt;
+        </button>
         <button type="button" class="btn btn-light">&gt;&gt;</button>
     </div>
 </template>
@@ -46,6 +50,16 @@ export default {
             var skipValue = this.itemsSkipArray.find((x) => x.key === page);
 
             this.$emit("navigate", { skip: skipValue.value.skip });
+        },
+        prevPage() {
+            let targetPage = this.currentPage - 1;
+
+            this.navigateTo(targetPage <= 0 ? 1 : targetPage);
+        },
+        nextPage() {
+            let targetPage = this.currentPage + 1;
+
+            this.navigateTo(targetPage >= this.pages ? this.pages : targetPage);
         },
         rewind() {
             this.currentPage = 1;

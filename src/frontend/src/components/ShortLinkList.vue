@@ -2,7 +2,7 @@
     <div class="row" v-if="links && totalCount > linksPerPage">
         <div class="col mb-2">
             <LinkPagination
-                :items-count="totalCount"
+                :items-count="91"
                 :page-size="linksPerPage"
                 @navigate="navigateAction"
             />
@@ -87,9 +87,10 @@ export default {
             return formatDate(date);
         },
         navigateAction(data) {
-            reload(this.linksPerPage, data.skip).then((response) => {
+            console.log(data.skip);
+            /*reload(this.linksPerPage, data.skip).then((response) => {
                 this.links = response.data.links;
-            });
+            });*/
         },
     },
 };
