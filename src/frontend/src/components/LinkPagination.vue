@@ -6,16 +6,20 @@
         <button type="button" class="btn btn-light" @click="prevPage()">
             &lt;
         </button>
-        <button
-            v-for="(page, index) in pages"
-            :key="index"
-            type="button"
-            class="btn btn-light"
-            :class="{ active: currentPage === page }"
-            @click="navigateTo(page)"
-        >
-            {{ page }}
-        </button>
+        <template v-for="(page, index) in pages" :key="index">
+            <button v-if="page.breakView" type="button" class="btn btn-light">
+                {{ page.value }}
+            </button>
+            <button
+                v-else
+                type="button"
+                class="btn btn-light"
+                :class="{ active: currentPage === page.value }"
+                @click="navigateTo(page.value)"
+            >
+                {{ page.value }}
+            </button>
+        </template>
         <!--<button type="button" class="btn btn-light">1</button>
         <button type="button" class="btn btn-light active">2</button>
         <button type="button" class="btn btn-light">...</button>
@@ -35,7 +39,6 @@ export default {
     data() {
         return {
             currentPage: 1,
-            itemsSkipArray: [],
         };
     },
     props: {
@@ -45,15 +48,58 @@ export default {
     emits: ["navigate"],
     computed: {
         pages() {
+            let items = [];
+
+            /**
+             * [1,2,...,9,10]           cur: 1, amount: 5
+             * [1,2,3,...,9,10]         cur: 2, amount: 6
+             * [1,2,3,4,5,...,9,10]     cur: 4, amount: 8
+             * [1,2,3,4,5,6,7,...,9,10] cur: 6, amount: 10
+             * [1,2,3,4,5,6,7,8,9,10]   cur: 7, amount: 10
+             */
+            if (this.pageCount > 5) {
+                let elementsCount = this.currentPage + 4;
+
+                if (elementsCount > this.pageCount) {
+                    elementsCount = this.pageCount;
+                }
+
+                for (
+                    let i = 0;
+                    i <= this.currentPage && i < this.pageCount - 2;
+                    i++
+                ) {
+                    items.push({ value: i + 1 });
+                }
+                let elementsLeft = elementsCount - items.length;
+
+                if (elementsLeft >= 3) {
+                    items.push({ breakView: true, value: "..." });
+                } else if (elementsLeft > 2) {
+                    items.push({ value: this.pageCount - 2 });
+                }
+
+                if (elementsLeft > 0) {
+                    items.push({ value: this.pageCount - 1 });
+                    items.push({ value: this.pageCount });
+                }
+            } else {
+                for (let i = 1; i <= this.pageCount; i++) {
+                    items.push({ value: i });
+                }
+            }
+
+            return items;
+        },
+        pageCount() {
             return Math.ceil(this.itemsCount / this.pageSize);
         },
     },
     methods: {
         navigateTo(page) {
             this.currentPage = page;
-            var skipValue = this.itemsSkipArray.find((x) => x.key === page);
 
-            this.$emit("navigate", { skip: skipValue.value.skip });
+            this.$emit("navigate", { skip: (page - 1) * this.pageSize });
         },
         toFirstPage() {
             this.navigateTo(1);
@@ -66,23 +112,18 @@ export default {
         nextPage() {
             let targetPage = this.currentPage + 1;
 
-            this.navigateTo(targetPage >= this.pages ? this.pages : targetPage);
+            this.navigateTo(
+                targetPage >= this.pageCount ? this.pageCount : targetPage
+            );
         },
         toLastPage() {
-            this.navigateTo(this.pages);
+            this.navigateTo(this.pageCount);
         },
         rewind() {
             this.currentPage = 1;
             this.initialize();
         },
         initialize() {
-            this.itemsSkipArray = [];
-            for (let i = 0; i < this.pages; i++) {
-                this.itemsSkipArray.push({
-                    key: i + 1,
-                    value: { skip: i * this.pageSize },
-                });
-            }
             this.navigateTo(this.currentPage);
         },
     },
