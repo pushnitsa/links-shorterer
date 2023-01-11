@@ -20,11 +20,6 @@
                 {{ page.value }}
             </button>
         </template>
-        <!--<button type="button" class="btn btn-light">1</button>
-        <button type="button" class="btn btn-light active">2</button>
-        <button type="button" class="btn btn-light">...</button>
-        <button type="button" class="btn btn-light">9</button>
-        <button type="button" class="btn btn-light">10</button>-->
         <button type="button" class="btn btn-light" @click="nextPage()">
             &gt;
         </button>
