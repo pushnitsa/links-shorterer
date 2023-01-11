@@ -1,4 +1,13 @@
 <template>
+    <div class="row" v-if="links">
+        <div class="col mb-2">
+            <LinkPagination
+                :items-count="totalCount"
+                :page-size="linksPerPage"
+                @navigate="navigateAction"
+            />
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm" v-if="links">
             <thead>
@@ -39,12 +48,14 @@
 <script>
 import LinksService from "@/services/LinksService";
 import { formatDate } from "@/helpers/dateFormatter.js";
+import LinkPagination from "./LinkPagination.vue";
 
 function reload(take, skip) {
     return LinksService.getLinks(take, skip);
 }
 
 export default {
+    components: { LinkPagination },
     props: {
         linksPerPage: {
             type: Number,
@@ -74,6 +85,11 @@ export default {
     methods: {
         formatDate(date) {
             return formatDate(date);
+        },
+        navigateAction(data) {
+            reload(this.linksPerPage, data.skip).then((response) => {
+                this.links = response.data.links;
+            });
         },
     },
 };
