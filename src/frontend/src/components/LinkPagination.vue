@@ -53,29 +53,36 @@ export default {
              * [1,2,3,4,5,6,7,8,9,10]   cur: 7, amount: 10
              */
             if (this.pageCount > 5) {
-                let elementsCount = this.currentPage + 4;
-
-                if (elementsCount > this.pageCount) {
-                    elementsCount = this.pageCount;
-                }
+                const pagesToExclude = 3;
+                const minimumPagesInTheEndToIncludeBreakView = 4;
 
                 for (
                     let i = 0;
-                    i <= this.currentPage && i < this.pageCount - 2;
+                    // Exclude last three pages, we'll handle its manually
+                    i <= this.currentPage &&
+                    i < this.pageCount - pagesToExclude;
                     i++
                 ) {
                     items.push({ value: i + 1 });
                 }
-                let elementsLeft = elementsCount - items.length;
 
-                if (elementsLeft >= 3) {
+                // Has to be at least 4 more pages to include break view
+                const includeBreakView =
+                    this.currentPage + minimumPagesInTheEndToIncludeBreakView <
+                    this.pageCount;
+
+                if (includeBreakView) {
                     items.push({ breakView: true, value: "..." });
-                } else if (elementsLeft > 2) {
-                    items.push({ value: this.pageCount - 2 });
                 }
 
-                items.push({ value: this.pageCount - 1 });
-                items.push({ value: this.pageCount });
+                let includingEndPages = this.pageCount - 1;
+                if (!includeBreakView) {
+                    --includingEndPages;
+                }
+
+                for (let i = includingEndPages; i <= this.pageCount; i++) {
+                    items.push({ value: i });
+                }
             } else {
                 for (let i = 1; i <= this.pageCount; i++) {
                     items.push({ value: i });
