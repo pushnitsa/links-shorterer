@@ -1,5 +1,5 @@
 <template>
-    <div class="row" v-if="links">
+    <div class="row" v-if="links && totalCount > linksPerPage">
         <div class="col mb-2">
             <LinkPagination
                 :items-count="totalCount"
