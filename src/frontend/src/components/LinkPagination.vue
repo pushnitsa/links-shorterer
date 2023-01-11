@@ -68,7 +68,7 @@ export default {
 
                 // Has to be at least 4 more pages to include break view
                 const includeBreakView =
-                    this.currentPage + minimumPagesInTheEndToIncludeBreakView <
+                    this.currentPage + minimumPagesInTheEndToIncludeBreakView <=
                     this.pageCount;
 
                 if (includeBreakView) {
