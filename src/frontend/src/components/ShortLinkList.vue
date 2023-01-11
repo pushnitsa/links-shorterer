@@ -38,6 +38,7 @@
 
 <script>
 import LinksService from "@/services/LinksService";
+import { formatDate } from "@/helpers/dateFormatter.js";
 
 function reload(take, skip) {
     return LinksService.getLinks(take, skip);
@@ -72,19 +73,7 @@ export default {
     },
     methods: {
         formatDate(date) {
-            let dateObject = new Date(date);
-            let result =
-                dateObject.getDate() +
-                "/" +
-                (dateObject.getMonth() + 1) +
-                "/" +
-                dateObject.getFullYear() +
-                " " +
-                dateObject.getHours() +
-                ":" +
-                dateObject.getMinutes();
-
-            return result;
+            return formatDate(date);
         },
     },
 };
