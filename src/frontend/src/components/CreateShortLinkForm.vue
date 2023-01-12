@@ -1,15 +1,17 @@
 <template>
     <div class="container">
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent="onSubmit" novalidate>
             <div class="col-6 mb-4">
                 <label for="inputUrl" class="form-label">Url</label>
                 <input
                     type="text"
                     class="form-control"
+                    :class="{ 'is-invalid': v$.fullUrl.$errors.length }"
                     id="inputUrl"
-                    v-model="fullUrl"
+                    v-model="v$.fullUrl.$model"
                     aria-describedby="urlHelp"
                 />
+                <div class="invalid-feedback">Please provide a valid url.</div>
                 <div id="urlHelp" class="form-text">
                     Type an Url address you want the short link to
                 </div>
@@ -28,7 +30,11 @@
                         Leave this field blank to random short link value
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button
+                    :disabled="v$.$invalid"
+                    type="submit"
+                    class="btn btn-primary"
+                >
                     Create short link
                 </button>
             </div>
@@ -38,12 +44,24 @@
 
 <script>
 import LinksService from "@/services/LinksService";
+import { required, url } from "@vuelidate/validators";
+import { useVuelidate } from "@vuelidate/core";
 
 export default {
     data() {
         return {
             fullUrl: null,
             shortName: null,
+        };
+    },
+    setup() {
+        return {
+            v$: useVuelidate(),
+        };
+    },
+    validations() {
+        return {
+            fullUrl: { required, url },
         };
     },
     methods: {
