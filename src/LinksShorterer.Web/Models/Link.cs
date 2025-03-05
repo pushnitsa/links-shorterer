@@ -4,11 +4,11 @@ public class Link
 {
     public Guid Id { get; set; }
 
-    public string FullUrl { get; set; }
+    public required string FullUrl { get; init; }
 
     public string? ShortName { get; set; }
 
-    public bool IsPermanent { get; set; }
+    public bool IsPermanent { get; init; }
 
     public DateTime CreatedAt { get; set; }
 
